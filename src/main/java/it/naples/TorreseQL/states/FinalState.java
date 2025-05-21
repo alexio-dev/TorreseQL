@@ -11,10 +11,7 @@ public class FinalState extends AbstractState {
 
     @Override
     public AbstractState transitionToNextState(String token) throws iDontKnow {
-        throw new iDontKnow(
-                "%endOfQuery%",
-                token
-        );
+        throw new iDontKnow("%endOfQuery%", token);
     }
 
     @Override

@@ -24,12 +24,7 @@ public class JoinState extends AbstractState {
             return new FieldState(queryInfo);
         }
 
-        throw new iDontKnow(
-                Arrays.asList(
-                        Keywords.AND,
-                        Keywords.OR
-                ), token
-        );
+        throw new iDontKnow(Arrays.asList(Keywords.AND, Keywords.OR), token);
     }
 
     @Override

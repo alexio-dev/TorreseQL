@@ -18,13 +18,9 @@ public class TokenState extends AbstractState {
 
     @Override
     public AbstractState transitionToNextState(String token) throws iDontKnow {
-        if (token.equalsIgnoreCase(expectedToken))
-            return transitionFunction.apply(queryInfo);
+        if (token.equalsIgnoreCase(expectedToken)) return transitionFunction.apply(queryInfo);
 
-        throw new iDontKnow(
-                expectedToken,
-                token
-        );
+        throw new iDontKnow(expectedToken, token);
     }
 
 }

@@ -9,10 +9,7 @@ import java.util.Scanner;
 
 public class TorreseShell {
     public static void main(String[] args) throws Exception {
-        Scanner scanner = new Scanner(
-                System.in,
-                StandardCharsets.UTF_8
-        );
+        Scanner scanner = new Scanner(System.in, StandardCharsets.UTF_8);
 
         System.out.print("Inserisci la stringa JDBC: ");
         String URL = scanner.nextLine();
@@ -27,14 +24,12 @@ public class TorreseShell {
                 System.out.println(query);
 
                 QueryResult result = interpreter.execute(query);
-                if (result.getResultSet() != null)
-                    printSelectResult(result.getResultSet());
+                if (result.getResultSet() != null) printSelectResult(result.getResultSet());
 
                 if (result.getAffectedRows() != null)
                     System.out.println("Righe coinvolte: " + result.getAffectedRows());
 
-                if (result.getResultSet() == null && result.getAffectedRows() == null)
-                    System.out.println("OK");
+                if (result.getResultSet() == null && result.getAffectedRows() == null) System.out.println("OK");
 
             } catch (iDontKnow | SQLException exception) {
                 System.err.println("Errore: " + exception.getMessage());

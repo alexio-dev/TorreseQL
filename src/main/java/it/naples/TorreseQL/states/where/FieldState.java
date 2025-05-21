@@ -13,10 +13,7 @@ public class FieldState extends AbstractState {
 
     @Override
     public AbstractState transitionToNextState(String token) throws iDontKnow {
-        return new OperatorState(
-                queryInfo,
-                new Condition(token)
-        );
+        return new OperatorState(queryInfo, new Condition(token));
     }
 
 }

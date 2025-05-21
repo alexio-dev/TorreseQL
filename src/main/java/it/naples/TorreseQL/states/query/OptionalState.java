@@ -20,33 +20,23 @@ public class OptionalState extends AbstractState {
 
     @Override
     public AbstractState transitionToNextState(String token) throws iDontKnow {
-        List<String> expectedKeywords = new ArrayList<>(
-                Collections.singletonList(
-                        Keywords.WHERE
-                )
-        );
+        List<String> expectedKeywords = new ArrayList<>(Collections.singletonList(Keywords.WHERE));
 
-        if (token.equalsIgnoreCase(Keywords.WHERE))
-            return new FieldState(queryInfo);
+        if (token.equalsIgnoreCase(Keywords.WHERE)) return new FieldState(queryInfo);
 
         if (queryInfo.getType().equals(QueryType.SELECT)) {
             expectedKeywords.add(Keywords.JOIN[0]);
             if (token.equalsIgnoreCase(Keywords.JOIN[0]))
-                return new MatchState(
-                        queryInfo,
-                        Keywords.JOIN,
-                        firstPart -> new ConsumerState(
-                                firstPart,
-                                firstPart::addJoinedTable,
-                                OptionalState::new
-                        )
-                );
+                return new MatchState(queryInfo, Keywords.JOIN, firstPart -> new ConsumerState(firstPart, firstPart::addJoinedTable, OptionalState::new)) {
+
+                    @Override
+                    public AbstractState transitionToNextState(String token) throws iDontKnow {
+                        return this;
+                    }
+                };
         }
 
-        throw new iDontKnow(
-                expectedKeywords,
-                token
-        );
+        throw new iDontKnow(expectedKeywords, token);
     }
 
     @Override

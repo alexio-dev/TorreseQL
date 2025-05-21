@@ -23,25 +23,18 @@ public class OperatorState extends AbstractState {
             if (token.equalsIgnoreCase(Keywords.ISNT[0])) {
                 condition.setOperator("IS NOT");
 
-                return new MatchState(
-                        queryInfo,
-                        Keywords.ISNT,
-                        firstPart -> new ConditionState(
-                                firstPart,
-                                condition
-                        )
-                );
+                return new MatchState(queryInfo, Keywords.ISNT, firstPart -> new ConditionState(firstPart, condition)) {
+                    @Override
+                    public AbstractState transitionToNextState(String token) throws iDontKnow {
+                        return this;
+                    }
+                };
             }
 
-            if (token.equalsIgnoreCase(Keywords.IS))
-                condition.setOperator("IS");
-            else
-                condition.setOperator(token);
+            if (token.equalsIgnoreCase(Keywords.IS)) condition.setOperator("IS");
+            else condition.setOperator(token);
 
-            return new ConditionState(
-                    queryInfo,
-                    condition
-            );
+            return new ConditionState(queryInfo, condition);
         }
         throw new iDontKnow(Keywords.OPERATORS, token);
     }

@@ -69,13 +69,7 @@ public class QueryInfo {
     }
 
     public enum QueryType {
-        SELECT,
-        UPDATE,
-        DELETE,
-        INSERT,
-        COMMIT,
-        BEGIN,
-        ROLLBACK
+        SELECT, UPDATE, DELETE, INSERT, COMMIT, BEGIN, ROLLBACK
     }
 
 }

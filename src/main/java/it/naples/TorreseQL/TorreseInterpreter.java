@@ -32,21 +32,15 @@ public class TorreseInterpreter {
         String delimiter = ", ";
 
         AbstractState currentState = new InitialState();
-        StringTokenizer tokenizer = new StringTokenizer(
-                query,
-                delimiter,
-                true
-        );
+        StringTokenizer tokenizer = new StringTokenizer(query, delimiter, true);
 
         while (tokenizer.hasMoreTokens()) {
             String nextToken = tokenizer.nextToken().trim();
 
-            if (!nextToken.isEmpty())
-                currentState = currentState.transitionToNextState(nextToken);
+            if (!nextToken.isEmpty()) currentState = currentState.transitionToNextState(nextToken);
         }
 
-        if (!currentState.isFinalState())
-            throw new iDontKnow("Query: Fine Inaspettata");
+        if (!currentState.isFinalState()) throw new iDontKnow("Query: Fine Inaspettata");
 
         return currentState.getQueryInfo();
     }
@@ -79,70 +73,39 @@ public class TorreseInterpreter {
         List<Condition> conditions = queryInfo.getWhereConditions();
         List<String> joinOperators = queryInfo.getJoinOperators();
 
-        if (conditions.isEmpty())
-            return "";
+        if (conditions.isEmpty()) return "";
 
         StringBuilder whereClause = new StringBuilder(" WHERE ");
 
         for (int i = 0; i < conditions.size(); i++) {
             Condition condition = conditions.get(i);
 
-            whereClause.append(
-                    condition.getField()
-            ).append(" ").append(
-                    condition.getOperator()
-            ).append(" ").append(
-                    condition.getValue()
-            );
+            whereClause.append(condition.getField()).append(" ").append(condition.getOperator()).append(" ").append(condition.getValue());
 
-            if (joinOperators.size() >= i + 1)
-                whereClause.append(" ").append(
-                        joinOperators.get(i)
-                ).append(" ");
+            if (joinOperators.size() >= i + 1) whereClause.append(" ").append(joinOperators.get(i)).append(" ");
         }
 
         return whereClause.toString();
     }
 
     private static String updateQuery(QueryInfo queryInfo) {
-        StringBuilder query = new StringBuilder("UPDATE ").append(
-                queryInfo.getTableName()
-        ).append(" SET ");
+        StringBuilder query = new StringBuilder("UPDATE ").append(queryInfo.getTableName()).append(" SET ");
 
         for (int i = 0; i < queryInfo.getColumnNames().size(); i++)
-            query.append(
-                    queryInfo.getColumnNames().get(i)
-            ).append(" = ").append(
-                    queryInfo.getValues().get(i)
-            ).append(", ");
+            query.append(queryInfo.getColumnNames().get(i)).append(" = ").append(queryInfo.getValues().get(i)).append(", ");
 
-        query.delete(
-                query.length() - 2,
-                query.length()
-        );
+        query.delete(query.length() - 2, query.length());
 
         return query + buildClause(queryInfo);
     }
 
     private static String insertQuery(QueryInfo queryInfo) {
-        StringBuilder query = new StringBuilder("INSERT INTO ").append(
-                queryInfo.getTableName()
-        );
+        StringBuilder query = new StringBuilder("INSERT INTO ").append(queryInfo.getTableName());
 
         if (!queryInfo.getColumnNames().isEmpty())
-            query.append(" ( ").append(
-                    String.join(
-                            ", ",
-                            queryInfo.getColumnNames()
-                    )
-            ).append(" )");
+            query.append(" ( ").append(String.join(", ", queryInfo.getColumnNames())).append(" )");
 
-        query.append(" VALUES ( ").append(
-                String.join(
-                        ", ",
-                        queryInfo.getValues()
-                )
-        ).append(" )");
+        query.append(" VALUES ( ").append(String.join(", ", queryInfo.getValues())).append(" )");
 
         return query.toString();
     }
@@ -150,19 +113,12 @@ public class TorreseInterpreter {
     private static String selectQuery(QueryInfo queryInfo) {
         String query = "SELECT ";
 
-        query += String.join(
-                ", ",
-                queryInfo.getColumnNames()
-        );
+        query += String.join(", ", queryInfo.getColumnNames());
 
         query += " FROM " + queryInfo.getTableName();
 
         List<String> joinedTables = queryInfo.getJoinedTables();
-        if (!joinedTables.isEmpty())
-            query += " INNER JOIN " + String.join(
-                    " INNER JOIN ",
-                    joinedTables
-            );
+        if (!joinedTables.isEmpty()) query += " INNER JOIN " + String.join(" INNER JOIN ", joinedTables);
 
         query += buildClause(queryInfo);
 

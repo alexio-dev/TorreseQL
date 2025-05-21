@@ -37,8 +37,7 @@ public class ValueState extends AbstractState {
     @Override
     public AbstractState transitionToNextState(String token) throws iDontKnow {
         if (token.equals(",")) {
-            if (lastWasComma)
-                throw new iDontKnow(expectedToken, token);
+            if (lastWasComma) throw new iDontKnow(expectedToken, token);
             else {
                 lastWasComma = true;
                 return this;
@@ -46,10 +45,8 @@ public class ValueState extends AbstractState {
         }
 
         if (lastWasComma) {
-            if (optionalValues && token.equalsIgnoreCase(nextToken))
-                return transitionFunction.apply(queryInfo);
-            else
-                optionalValues = false;
+            if (optionalValues && token.equalsIgnoreCase(nextToken)) return transitionFunction.apply(queryInfo);
+            else optionalValues = false;
 
             collector.add(token);
             lastWasComma = false;
@@ -57,8 +54,7 @@ public class ValueState extends AbstractState {
             return this;
         }
 
-        if (token.equalsIgnoreCase(nextToken))
-            return transitionFunction.apply(queryInfo);
+        if (token.equalsIgnoreCase(nextToken)) return transitionFunction.apply(queryInfo);
 
         throw new iDontKnow(Arrays.asList(",", nextToken), token);
     }

@@ -20,36 +20,26 @@ public class SelectState extends AbstractState {
         if (token.equalsIgnoreCase(Keywords.ALL[0])) {
             queryInfo.addColumnName("*");
 
-            return new MatchState(
-                    queryInfo,
-                    Keywords.ALL,
-                    firstPart -> new MatchState(
-                            firstPart,
-                            Keywords.FROM,
-                            secondPart -> new ConsumerState(
-                                    secondPart,
-                                    secondPart::setTableName,
-                                    OptionalState::new
-                            ), index
-                    )
-            );
+            return new MatchState(queryInfo, Keywords.ALL, firstPart -> new MatchState(firstPart, Keywords.FROM, secondPart -> new ConsumerState(secondPart, secondPart::setTableName, OptionalState::new), index) {
+                @Override
+                public AbstractState transitionToNextState(String token) throws iDontKnow {
+                    return this;
+                }
+            }) {
+                @Override
+                public AbstractState transitionToNextState(String token) throws iDontKnow {
+                    return this;
+                }
+            };
         } else {
             queryInfo.addColumnName(token);
 
-            return new ValueState(
-                    queryInfo,
-                    queryInfo.getColumnNames(),
-                    Keywords.FROM[0],
-                    "%columnNames%",
-                    firstPart -> new MatchState(
-                            queryInfo,
-                            Keywords.FROM,
-                            secondPart -> new ConsumerState(
-                                    secondPart,
-                                    secondPart::setTableName,
-                                    OptionalState::new
-                            ))
-            );
+            return new ValueState(queryInfo, queryInfo.getColumnNames(), Keywords.FROM[0], "%columnNames%", firstPart -> new MatchState(queryInfo, Keywords.FROM, secondPart -> new ConsumerState(secondPart, secondPart::setTableName, OptionalState::new)) {
+                @Override
+                public AbstractState transitionToNextState(String token) throws iDontKnow {
+                    return this;
+                }
+            });
         }
     }
 }

@@ -18,31 +18,12 @@ public class UpdateState extends AbstractState {
     @Override
     public AbstractState transitionToNextState(String token) throws iDontKnow {
         if (token.equalsIgnoreCase(","))
-            return new ConsumerState(
-                    queryInfo,
-                    queryInfo::addColumnName,
-                    firstPart -> new TokenState(
-                            firstPart,
-                            Keywords.EQUAL,
-                            secondPart -> new ConsumerState(
-                                    secondPart,
-                                    secondPart::addValue,
-                                    UpdateState::new
-                            )
-                    )
-            );
+            return new ConsumerState(queryInfo, queryInfo::addColumnName, firstPart -> new TokenState(firstPart, Keywords.EQUAL, secondPart -> new ConsumerState(secondPart, secondPart::addValue, UpdateState::new)));
 
-        if (token.equalsIgnoreCase(Keywords.WHERE))
-            return new FieldState(queryInfo);
+        if (token.equalsIgnoreCase(Keywords.WHERE)) return new FieldState(queryInfo);
 
 
-        throw new iDontKnow(
-                Arrays.asList(
-                        ",",
-                        Keywords.WHERE,
-                        "%endOfQuery%"
-                ), token
-        );
+        throw new iDontKnow(Arrays.asList(",", Keywords.WHERE, "%endOfQuery%"), token);
     }
 
     @Override

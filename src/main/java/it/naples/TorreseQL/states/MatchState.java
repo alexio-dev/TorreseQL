@@ -5,7 +5,7 @@ import it.naples.TorreseQL.model.iDontKnow;
 
 import java.util.function.Function;
 
-public class MatchState extends AbstractState {
+public abstract class MatchState extends AbstractState {
 
     private final String[] keywords;
     private final Function<QueryInfo, AbstractState> nextStateTransition;
@@ -26,19 +26,14 @@ public class MatchState extends AbstractState {
         this.currentIndex = currentIndex;
     }
 
-    @Override
     public AbstractState nextTransaction(String token) throws iDontKnow {
         if (token.equalsIgnoreCase(keywords[currentIndex])) {
             currentIndex++;
-            if (currentIndex == keywords.length)
-                return nextStateTransition.apply(queryInfo);
+            if (currentIndex == keywords.length) return nextStateTransition.apply(queryInfo);
 
             return this;
         }
 
-        throw new iDontKnow(
-                keywords[currentIndex],
-                token
-        );
+        throw new iDontKnow(keywords[currentIndex], token);
     }
 }

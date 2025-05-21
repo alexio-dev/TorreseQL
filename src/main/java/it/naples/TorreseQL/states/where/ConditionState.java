@@ -17,10 +17,8 @@ public class ConditionState extends AbstractState {
 
     @Override
     public AbstractState transitionToNextState(String token) throws iDontKnow {
-        if (token.equalsIgnoreCase(Keywords.NULL))
-            condition.setValue("NULL");
-        else
-            condition.setValue(token);
+        if (token.equalsIgnoreCase(Keywords.NULL)) condition.setValue("NULL");
+        else condition.setValue(token);
 
         queryInfo.addCondition(condition);
 

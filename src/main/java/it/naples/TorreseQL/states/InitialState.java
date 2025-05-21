@@ -26,81 +26,42 @@ public class InitialState extends AbstractState {
 
         if (token.equalsIgnoreCase(Keywords.UPDATE)) {
             queryInfo.setType(QueryType.UPDATE);
-            return new ConsumerState(
-                    queryInfo,
-                    queryInfo::setTableName,
-                    firstPart -> new TokenState(
-                            firstPart,
-                            Keywords.SET,
-                            secondPart -> new ConsumerState(
-                                    secondPart,
-                                    secondPart::addColumnName,
-                                    thirdPart -> new TokenState(
-                                            thirdPart, Keywords.EQUAL,
-                                            fourthPart -> new ConsumerState(
-                                                    fourthPart,
-                                                    fourthPart::addValue,
-                                                    UpdateState::new
-                                            )
-                                    )
-                            )
-                    )
-            );
+            return new ConsumerState(queryInfo, queryInfo::setTableName, firstPart -> new TokenState(firstPart, Keywords.SET, secondPart -> new ConsumerState(secondPart, secondPart::addColumnName, thirdPart -> new TokenState(thirdPart, Keywords.EQUAL, fourthPart -> new ConsumerState(fourthPart, fourthPart::addValue, UpdateState::new)))));
         }
 
         if (token.equalsIgnoreCase(Keywords.DELETE[0])) {
             queryInfo.setType(QueryType.DELETE);
-            return new MatchState(
-                    queryInfo,
-                    Keywords.DELETE,
-                    firstPart -> new MatchState(
-                            firstPart,
-                            Keywords.FROM,
-                            secondPart -> new ConsumerState(
-                                    secondPart,
-                                    secondPart::setTableName,
-                                    OptionalState::new
-                            ), index
-                    )
-            );
+            return new MatchState(queryInfo, Keywords.DELETE, firstPart -> new MatchState(firstPart, Keywords.FROM, secondPart -> new ConsumerState(secondPart, secondPart::setTableName, OptionalState::new), index) {
+                @Override
+                public AbstractState transitionToNextState(String token) throws iDontKnow {
+                    return this;
+                }
+            }) {
+                @Override
+                public AbstractState transitionToNextState(String token) throws iDontKnow {
+                    return this;
+                }
+            };
         }
 
         if (token.equalsIgnoreCase(Keywords.INSERT[0])) {
             queryInfo.setType(QueryType.INSERT);
-            return new MatchState(
-                    queryInfo,
-                    Keywords.INSERT,
-                    firstPart -> new ConsumerState(
-                            firstPart,
-                            firstPart::setTableName,
-                            secondPart -> new ValueState(
-                                    secondPart,
-                                    secondPart.getColumnNames(),
-                                    Keywords.VALUES,
-                                    "%COLUMN_NAME%",
-                                    true,
-                                    false,
-                                    thirdPart -> new ValueState(
-                                            thirdPart,
-                                            thirdPart.getValues(),
-                                            null,
-                                            "%VALUE%",
-                                            true,
-                                            true,
-                                            FinalState::new
-                                    )
-                            )
-                    )
-            );
+            return new MatchState(queryInfo, Keywords.INSERT, firstPart -> new ConsumerState(firstPart, firstPart::setTableName, secondPart -> new ValueState(secondPart, secondPart.getColumnNames(), Keywords.VALUES, "%COLUMN_NAME%", true, false, thirdPart -> new ValueState(thirdPart, thirdPart.getValues(), null, "%VALUE%", true, true, FinalState::new)))) {
+                @Override
+                public AbstractState transitionToNextState(String token) throws iDontKnow {
+                    return this;
+                }
+            };
         }
 
         if (token.equalsIgnoreCase(Keywords.COMMIT[0])) {
             queryInfo.setType(QueryType.COMMIT);
-            return new MatchState(
-                    queryInfo,
-                    Keywords.COMMIT,
-                    FinalState::new
-            );
+            return new MatchState(queryInfo, Keywords.COMMIT, FinalState::new) {
+                @Override
+                public AbstractState transitionToNextState(String token) throws iDontKnow {
+                    return this;
+                }
+            };
         }
 
         if (token.equalsIgnoreCase(Keywords.ROLLBACK)) {
@@ -110,24 +71,15 @@ public class InitialState extends AbstractState {
 
         if (token.equalsIgnoreCase(Keywords.BEGIN[0])) {
             queryInfo.setType(QueryType.BEGIN);
-            return new MatchState(
-                    queryInfo,
-                    Keywords.BEGIN,
-                    FinalState::new
-            );
+            return new MatchState(queryInfo, Keywords.BEGIN, FinalState::new) {
+                @Override
+                public AbstractState transitionToNextState(String token) throws iDontKnow {
+                    return this;
+                }
+            };
         }
 
-        throw new iDontKnow(
-                Arrays.asList(
-                        Keywords.SELECT,
-                        Keywords.UPDATE,
-                        Keywords.INSERT[0],
-                        Keywords.DELETE[0],
-                        Keywords.BEGIN[0],
-                        Keywords.COMMIT[0],
-                        Keywords.ROLLBACK),
-                token
-        );
+        throw new iDontKnow(Arrays.asList(Keywords.SELECT, Keywords.UPDATE, Keywords.INSERT[0], Keywords.DELETE[0], Keywords.BEGIN[0], Keywords.COMMIT[0], Keywords.ROLLBACK), token);
     }
 
 }
