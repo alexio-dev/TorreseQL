@@ -11,9 +11,11 @@ import java.sql.SQLException;
 public class TestWrongSyntax {
     private Connection connection;
 
+    final String JDBC = "";
+
     @Before
     public void setup() throws SQLException {
-        this.connection = Config.getDbConnection();
+        this.connection = Config.getConnection(JDBC);
     }
 
     @After

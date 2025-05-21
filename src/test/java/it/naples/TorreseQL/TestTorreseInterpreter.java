@@ -10,11 +10,13 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class TestTorreseInterpreter {
+    final String JDBC = "";
+
     private Connection connection;
 
     @Before
     public void setup() throws SQLException {
-        this.connection = Config.getDbConnection();
+        this.connection = Config.getConnection(JDBC);
     }
 
     @After

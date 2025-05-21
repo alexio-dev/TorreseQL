@@ -11,11 +11,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class TestTransactions {
+    final String JDBC = "";
+
     private Connection connection;
 
     @Before
     public void setup() throws SQLException {
-        this.connection = Config.getDbConnection();
+        this.connection = Config.getConnection(JDBC);
     }
 
     @After
