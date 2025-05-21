@@ -1,61 +1,60 @@
 package it.naples.TorreseQL;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
+import it.naples.TorreseQL.model.QueryResult;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import it.naples.TorreseQL.model.QueryResult;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class TestInsert {
-	private Connection connection;
-	
-	@Before
-	public void setup() throws SQLException {
-		this.connection = Config.getDbConnection();
-	}
-	
-	@After
-	public void teardown() throws SQLException {
-		this.connection.close();
-	}
-	
-	@Test
-	public void testInsert() throws SQLException {
-		TorreseInterpreter interpreter = new TorreseInterpreter(connection);
-		QueryResult result = interpreter.execute("");
-		Assert.assertEquals((Integer) 1, result.getAffectedRows());
-		
-		result = interpreter.execute("");
-		ResultSet resultSet = result.getResultSet();
+    private Connection connection;
 
-		int counter = 0;
+    @Before
+    public void setup() throws SQLException {
+        this.connection = Config.getDbConnection();
+    }
 
-		while (resultSet.next())
-			counter++;
+    @After
+    public void teardown() throws SQLException {
+        this.connection.close();
+    }
 
-		Assert.assertEquals(1, counter);
-	}
-	
-	@Test
-	public void testInsertWithColumnNames() throws SQLException {
-		TorreseInterpreter interpreter = new TorreseInterpreter(connection);
-		QueryResult result = interpreter.execute("");
-		Assert.assertEquals((Integer) 1, result.getAffectedRows());
-		
-		result = interpreter.execute("");
-		ResultSet resultSet = result.getResultSet();
+    @Test
+    public void testInsert() throws SQLException {
+        TorreseInterpreter interpreter = new TorreseInterpreter(connection);
+        QueryResult result = interpreter.execute("");
+        Assert.assertEquals((Integer) 1, result.getAffectedRows());
 
-		int counter = 0;
+        result = interpreter.execute("");
+        ResultSet resultSet = result.getResultSet();
 
-		while (resultSet.next())
-			counter++;
+        int counter = 0;
 
-		Assert.assertEquals(1, counter);
-	}
+        while (resultSet.next())
+            counter++;
+
+        Assert.assertEquals(1, counter);
+    }
+
+    @Test
+    public void testInsertWithColumnNames() throws SQLException {
+        TorreseInterpreter interpreter = new TorreseInterpreter(connection);
+        QueryResult result = interpreter.execute("");
+        Assert.assertEquals((Integer) 1, result.getAffectedRows());
+
+        result = interpreter.execute("");
+        ResultSet resultSet = result.getResultSet();
+
+        int counter = 0;
+
+        while (resultSet.next())
+            counter++;
+
+        Assert.assertEquals(1, counter);
+    }
 
 }

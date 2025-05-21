@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Config {
-	static Connection getConnection(String JDBC) throws SQLException {
-		return DriverManager.getConnection(JDBC);
-	}
+    static Connection getConnection(String JDBC) throws SQLException {
+        return DriverManager.getConnection(JDBC);
+    }
 }

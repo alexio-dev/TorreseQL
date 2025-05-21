@@ -1,32 +1,32 @@
 package it.naples.TorreseQL.model;
 
 public class Condition {
-	private final String field;
-	private String value;
-	private String operator;
+    private final String field;
+    private String value;
+    private String operator;
 
-	public Condition(String field) {
-		this.field = field;
-	}
+    public Condition(String field) {
+        this.field = field;
+    }
 
-	public String getField() {
-		return field;
-	}
+    public String getField() {
+        return field;
+    }
 
-	public String getValue() {
-		return value;
-	}
+    public String getValue() {
+        return value;
+    }
 
-	public void setValue(String value) {
-		this.value = value;
-	}
+    public void setValue(String value) {
+        this.value = value;
+    }
 
-	public String getOperator() {
-		return operator;
-	}
+    public String getOperator() {
+        return operator;
+    }
 
-	public void setOperator(String operator) {
-		this.operator = operator;
-	}
+    public void setOperator(String operator) {
+        this.operator = operator;
+    }
 
 }

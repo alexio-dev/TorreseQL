@@ -1,83 +1,82 @@
 package it.naples.TorreseQL;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
+import it.naples.TorreseQL.model.QueryResult;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import it.naples.TorreseQL.model.QueryResult;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class TestTransactions {
-	private Connection connection;
+    private Connection connection;
 
-	@Before
-	public void setup() throws SQLException {
-		this.connection = Config.getDbConnection();
-	}
+    @Before
+    public void setup() throws SQLException {
+        this.connection = Config.getDbConnection();
+    }
 
-	@After
-	public void teardown() throws SQLException {
-		this.connection.close();
-	}
+    @After
+    public void teardown() throws SQLException {
+        this.connection.close();
+    }
 
-	@Test
-	public void testTransactionRollback() throws SQLException {
-		TorreseInterpreter interpreter = new TorreseInterpreter(connection);
+    @Test
+    public void testTransactionRollback() throws SQLException {
+        TorreseInterpreter interpreter = new TorreseInterpreter(connection);
 
-		interpreter.execute("");
-		interpreter.execute("");
+        interpreter.execute("");
+        interpreter.execute("");
 
-		QueryResult result = interpreter.execute("");
-		ResultSet resultSet = result.getResultSet();
+        QueryResult result = interpreter.execute("");
+        ResultSet resultSet = result.getResultSet();
 
-		int expectedCount = 1;
+        int expectedCount = 1;
 
-		while (resultSet.next())
-			expectedCount++;
+        while (resultSet.next())
+            expectedCount++;
 
-		Assert.assertEquals(expectedCount, 2);
+        Assert.assertEquals(expectedCount, 2);
 
-		interpreter.execute("");
-		result = interpreter.execute("");
-		resultSet = result.getResultSet();
-		expectedCount = 1;
+        interpreter.execute("");
+        result = interpreter.execute("");
+        resultSet = result.getResultSet();
+        expectedCount = 1;
 
-		while (resultSet.next())
-			expectedCount++;
+        while (resultSet.next())
+            expectedCount++;
 
-		Assert.assertEquals(expectedCount, 1);
-	}
-	
-	@Test
-	public void testTransactionCommit() throws SQLException {
-		TorreseInterpreter interpreter = new TorreseInterpreter(connection);
+        Assert.assertEquals(expectedCount, 1);
+    }
 
-		interpreter.execute("");
-		interpreter.execute("");
+    @Test
+    public void testTransactionCommit() throws SQLException {
+        TorreseInterpreter interpreter = new TorreseInterpreter(connection);
 
-		QueryResult result = interpreter.execute("");
+        interpreter.execute("");
+        interpreter.execute("");
 
-		ResultSet resultSet = result.getResultSet();
+        QueryResult result = interpreter.execute("");
 
-		int expectedCount = 1;
+        ResultSet resultSet = result.getResultSet();
 
-		while (resultSet.next())
-			expectedCount++;
+        int expectedCount = 1;
 
-		Assert.assertEquals(expectedCount, 2);
+        while (resultSet.next())
+            expectedCount++;
 
-		interpreter.execute("");
-		result = interpreter.execute("");
-		resultSet = result.getResultSet();
-		expectedCount = 1;
+        Assert.assertEquals(expectedCount, 2);
 
-		while (resultSet.next())
-			expectedCount++;
+        interpreter.execute("");
+        result = interpreter.execute("");
+        resultSet = result.getResultSet();
+        expectedCount = 1;
 
-		Assert.assertEquals(expectedCount, 2);
-	}
+        while (resultSet.next())
+            expectedCount++;
+
+        Assert.assertEquals(expectedCount, 2);
+    }
 }

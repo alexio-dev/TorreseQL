@@ -3,24 +3,24 @@ package it.naples.TorreseQL.model;
 import java.sql.ResultSet;
 
 public class QueryResult {
-	
-	private Integer affectedRows;
-	private ResultSet resultSet;
 
-	public Integer getAffectedRows() {
-		return affectedRows;
-	}
+    private Integer affectedRows;
+    private ResultSet resultSet;
 
-	public void setAffectedRows(Integer affectedRows) {
-		this.affectedRows = affectedRows;
-	}
+    public Integer getAffectedRows() {
+        return affectedRows;
+    }
 
-	public ResultSet getResultSet() {
-		return resultSet;
-	}
+    public void setAffectedRows(Integer affectedRows) {
+        this.affectedRows = affectedRows;
+    }
 
-	public void setResultSet(ResultSet resultSet) {
-		this.resultSet = resultSet;
-	}
+    public ResultSet getResultSet() {
+        return resultSet;
+    }
+
+    public void setResultSet(ResultSet resultSet) {
+        this.resultSet = resultSet;
+    }
 
 }
